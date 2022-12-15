@@ -1,4 +1,5 @@
 mod day1;
+mod day2;
 
 use std::fmt::Display;
 
@@ -27,7 +28,7 @@ pub trait AdventSolution: AdventDay {
     fn run() {
         let path = format!("input/day{}.txt", Self::NUM);
 
-        let input = std::fs::read_to_string(path).unwrap();
+        let input = std::fs::read_to_string(path).expect("unable to open file");
 
         println!("Solution for {}", Self::get_day_name());
         println!("\tProblem one: {}", Self::problem_one(&input));

@@ -1,3 +1,5 @@
+use itertools::Itertools;
+
 use crate::days::{AdventSolution, Day};
 
 impl AdventSolution for Day<1> {
@@ -6,29 +8,50 @@ impl AdventSolution for Day<1> {
 
     fn problem_one(input: &str) -> Self::OutputOne {
         
-        elf_calorie_iterator(&input)
-            .max()
-            //.unwrap_or(0)
-            .unwrap()
-            
+        return elf_calorie_vec(&input)
+        .iter()
+        .max()
+        .unwrap_or(&0u64)
+        .to_owned();
+
     }
 
     fn problem_two(input: &str) -> Self::OutputTwo {
-        use std::collections::BinaryHeap;
+        
+        return elf_calorie_vec(&input)
+        .iter()
+        .sorted()
+        .rev()
+        .take(3)
+        .sum::<u64>();
 
-        return 200;
-        elf_calorie_iterator(&input)
-            .collect::<BinaryHeap<u64>>()
-            .into_iter()
-            .take(3)
-            .sum::<u64>()
     }
+
 }
 
 
-fn elf_calorie_iterator(input: &str) -> impl Iterator<Item = u64> + '_ {
-    input
-        .split("\n\n")
-        // .map(|e| e.lines().map(|c| c.parse::<u64>().unwrap()).sum::<u64>())
-        .map(|e| e.lines().map(|c| c.parse::<u64>().unwrap()).sum::<u64>())
+// fn elf_calorie_iterator(input: &str) -> impl Iterator<Item = u64> + '_ {
+fn elf_calorie_vec(input: &str) -> Vec<u64> {
+
+    let elf : Vec<u64> = input
+        .split("\r\n\r\n").map(|elf_collection| {
+            elf_collection
+                .lines()
+                .map(|c| c.parse::<u64>().unwrap_or(0))
+                .sum::<u64>()
+        })
+        .collect::<Vec<u64>>();
+    
+        return elf
+
+        
+
+    
+        
+        // .map(|elf_collection| {
+        //     elf_collection
+        //         .lines()
+        //         .map(|c| c.parse::<u64>().unwrap_or(0))
+        //         .sum::<u64>()
+        // })
 }
