@@ -19,6 +19,7 @@ macro_rules! run_aoc_days {
 fn main() {
     run_aoc_days![
         1,
-        2
+        2,
+        3
     ];
 }
