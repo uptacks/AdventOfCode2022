@@ -27,7 +27,6 @@ impl AdventSolution for Day<4> {
             }
         }
         return count;
-        return 0;
         }
 
     }
