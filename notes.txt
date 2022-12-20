@@ -1,0 +1,1 @@
+You should move the structures into another module for clarity (esp stack structure in day 5)
