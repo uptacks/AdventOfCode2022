@@ -1,7 +1,9 @@
+use crate::read_input_for_day;
+use crate::AdventSolution;
 use itertools::Itertools;
-use crate::days::{AdventSolution, Day};
 
-// Create instructions structure
+pub struct Day5;
+
 #[derive(Debug)]
 struct Instructions {
     numberToMove: u64,
@@ -9,38 +11,61 @@ struct Instructions {
     end: u64,
 }
 
-impl AdventSolution for Day<5> {
-    type OutputOne = String;
-    type OutputTwo = String;
-
-    fn problem_one(input: &str) -> Self::OutputOne {
-        let (mut crates, mut instructionList) = assign_to_stack(input);
-        let mut crates = move_crates_9000(crates, instructionList);
-        return crates.iter_mut().map(|x| x.pop().unwrap()).collect::<String>(); 
+impl AdventSolution for Day5 {
+    const DAY: u32 = 5;
+    const YEAR: u32 = 2022;
+    fn solve() -> (String, String) {
+        let input = read_input_for_day(Self::DAY, Self::YEAR);
+        let part_1_solution = problem_one(&input);
+        let part_2_solution = problem_two(&input);
+        (part_1_solution, part_2_solution)
     }
-
-    fn problem_two(input: &str) -> Self::OutputTwo {
-        let (mut crates, mut instructionList) = assign_to_stack(input);
-        let mut crates = move_crates_9001(crates, instructionList);
-        return crates.iter_mut().map(|x| x.pop().unwrap()).collect::<String>(); 
-    }
-
 }
 
-fn move_crates_9000(mut crates: Vec<Vec<char>>, mut instructionList: Vec<Instructions>) -> Vec<Vec<char>> {
+fn problem_one(input: &str) -> String {
+    let (mut crates, mut instructionList) = assign_to_stack(input);
+    let mut crates = move_crates_9000(crates, instructionList);
+    return crates
+        .iter_mut()
+        .map(|x| x.pop().unwrap())
+        .collect::<String>();
+}
+
+fn problem_two(input: &str) -> String {
+    let (mut crates, mut instructionList) = assign_to_stack(input);
+    let mut crates = move_crates_9001(crates, instructionList);
+    return crates
+        .iter_mut()
+        .map(|x| x.pop().unwrap())
+        .collect::<String>();
+}
+
+fn move_crates_9000(
+    mut crates: Vec<Vec<char>>,
+    mut instructionList: Vec<Instructions>,
+) -> Vec<Vec<char>> {
     for instruction in instructionList {
         for i in 0..instruction.numberToMove {
-            let mut temp = crates[(instruction.start - 1) as usize].pop().unwrap().to_owned();
+            let mut temp = crates[(instruction.start - 1) as usize]
+                .pop()
+                .unwrap()
+                .to_owned();
             crates[(instruction.end - 1) as usize].push(temp);
         }
     }
     return crates;
 }
 
-fn move_crates_9001(mut crates: Vec<Vec<char>>, mut instructionList: Vec<Instructions>) -> Vec<Vec<char>> {
+fn move_crates_9001(
+    mut crates: Vec<Vec<char>>,
+    mut instructionList: Vec<Instructions>,
+) -> Vec<Vec<char>> {
     for instruction in instructionList {
-        let mut to_collect = crates[(instruction.start - 1) as usize].len() - instruction.numberToMove as usize;
-        let mut temp: Vec<char> = crates[(instruction.start - 1) as usize].drain((to_collect..)).collect();
+        let mut to_collect =
+            crates[(instruction.start - 1) as usize].len() - instruction.numberToMove as usize;
+        let mut temp: Vec<char> = crates[(instruction.start - 1) as usize]
+            .drain(to_collect..)
+            .collect();
         crates[(instruction.end - 1) as usize].extend(temp);
     }
     return crates;
@@ -56,14 +81,14 @@ fn assign_to_stack(input: &str) -> (Vec<Vec<char>>, Vec<Instructions>) {
     let mut intruction_index = 0;
 
     for line in input.lines() {
-        let t = line.replace(|c:char| (c=='[' || c==']'), "");
+        let t = line.replace(|c: char| (c == '[' || c == ']'), "");
 
         let mut u = t.split(" ").map(|s| s.to_string()).collect_vec();
 
         let mut index_to_remove = Vec::<u64>::new();
         let mut count = 0;
-        for (index,i) in &mut u.iter_mut().enumerate() {
-            if i == "" && count!= 3{
+        for (index, i) in &mut u.iter_mut().enumerate() {
+            if i == "" && count != 3 {
                 count += 1;
                 index_to_remove.push(index as u64);
                 continue;
@@ -75,13 +100,12 @@ fn assign_to_stack(input: &str) -> (Vec<Vec<char>>, Vec<Instructions>) {
             u.remove(*i as usize);
         }
 
-
         copy.push(u);
     }
 
     for i in &copy {
         if i[0].parse::<u64>().unwrap_or(0) == 1u64 {
-            num_crates = i[i.len()-1].parse().unwrap();
+            num_crates = i[i.len() - 1].parse().unwrap();
             break;
         }
     }
@@ -90,13 +114,13 @@ fn assign_to_stack(input: &str) -> (Vec<Vec<char>>, Vec<Instructions>) {
         crates.push(Vec::new());
     }
 
-    for (n,i) in copy.iter().enumerate() {
+    for (n, i) in copy.iter().enumerate() {
         if i[0].parse::<u64>().unwrap_or(0) == 1u64 {
-            intruction_index = n+2;
+            intruction_index = n + 2;
             break;
         }
         for (crate_num, crate_item) in i.iter().enumerate() {
-            if (crate_item.chars().nth(0).is_none()) {
+            if crate_item.chars().nth(0).is_none() {
                 continue;
             }
             crates[crate_num].push(crate_item.chars().nth(0).unwrap());
@@ -121,7 +145,6 @@ fn assign_to_stack(input: &str) -> (Vec<Vec<char>>, Vec<Instructions>) {
     for i in &mut crates {
         i.reverse();
     }
-    
+
     return (crates, instructionList);
-    
 }
