@@ -1,3 +1,6 @@
+use std::collections::HashMap;
+use std::str::MatchIndices;
+
 use itertools::Itertools;
 
 pub struct Day1;
@@ -31,5 +34,17 @@ fn part_1_solution(input: &str) -> u64 {
 }
 
 fn part_2_solution(input: &str) -> u64 {
+    let digits: HashMap<&str, i32> = HashMap::from([
+        ("one", 1),
+        ("two", 2),
+        ("three", 3),
+        ("four", 4),
+        ("five", 5),
+        ("six", 6),
+        ("seven", 7),
+        ("eight", 8),
+        ("nine", 9),
+    ]);
+
     return 0;
 }
